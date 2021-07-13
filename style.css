@@ -1,0 +1,17 @@
+* { 
+    box-sizing: border-box;
+}
+
+main { 
+    display: flex;
+    width: 13vh;
+    flex-wrap: wrap;
+    /* justify-content: center; */
+}
+
+.box { 
+    width: 4vh;
+    height: 4vh;
+    border: 1px solid black;
+    /* justify-content:  */
+}
