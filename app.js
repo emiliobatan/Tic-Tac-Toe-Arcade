@@ -1,34 +1,42 @@
 // testing
-let testElem = document.querySelector('#board');
-console.log('testElem: ', testElem);
+// let testElem = document.querySelector('#board');
+// console.log('testElem: ', testElem);
 
 // State 
-let state = {}; 
+const state = {}; 
 
-function resetState () { 
-    state.board = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
+let resetState = () => { 
+    state.board = ['', '', '', '', '', '', '', '', '']; //  Function will wipe out the state and start over 
 };
 
 //  DOM SELECTORS 
 let boardElem = document.querySelector('#board'); 
 
 // DOM MANIPULATION FUNCTIONS 
-function renderBoard () { 
-    // How to empty an Element
-    boardElem.innerText = '';
-    for(let i=0; i<state.board.length; ++i) { 
-        let grid = state.board[i];
+const renderBoard = () => { 
+    boardElem.innerText = ''; // This allows us to refresh the board to blank 
+    for(let i=0; i<state.board.length; ++i) {      // Creating the grid for the tic tac toe game 
+        const grid = state.board[i];              // This creates the grid for the game 
         // console.log('grid: ', grid);
-        let boxElem = document.createElement('div');
+        const boxElem = document.createElement('div');   // This creates the boxes 
         boxElem.classList.add('box');
         // console.log('boxElem: ', boxElem);
-        boxElem.innerText = grid;
-        boardElem.appendChild(boxElem);
+        boxElem.dataset.index = i;     // Grabs data from the board 
+        boxElem.innerText = grid;      // This renders to the grid
+        boardElem.appendChild(boxElem);    // This creates the boxElem to go to the DOM
     }
 }
 
 // EVENT LISTENERS 
-
+boardElem.addEventListener('click', function(event) { 
+    if (event.target.className === 'box') { 
+        console.log('event.target: ', event.target);
+        let boxIdx = event.target.dataset.index;
+        console.log('boxIdx: ', boxIdx);
+        state.board[boxIdx] = 'X'
+        renderBoard();
+    }
+})
 
 
 // BOOSTRAPPING 

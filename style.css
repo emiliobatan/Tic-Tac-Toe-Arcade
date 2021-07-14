@@ -4,14 +4,12 @@
 
 main { 
     display: flex;
-    width: 30vh;
+    width: 50vh;
     flex-wrap: wrap;
-    /* justify-content: center; */
 }
 
 .box { 
-    width: 8vh;
-    height: 8vh;
-    border: 1px solid black;
-    /* justify-content:  */
+    width: 15vh;
+    height: 15vh;
+    border: 1px solid black; 
 }
