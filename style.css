@@ -13,3 +13,8 @@ main {
     height: 15vh;
     border: 1px solid black; 
 }
+
+#start { 
+    width: 15px;
+    height: 15px;
+}
