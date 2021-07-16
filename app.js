@@ -3,25 +3,31 @@
 // console.log('testElem: ', testElem);
 
 // State 
-const state = {}; 
+const state = {};
 
 const resetState = () => { 
-    // state.board = ['', '', '', '', '', '', '', '', '']; //  Function will wipe out the state and start over 
-    state.board = [ 
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-        {value: '', isTurned: false},
-    ];
+ // state.board = ['', '', '', '', '', '', '', '', '']; //  Function will wipe out the state and start over 
+  state.board = [
+    ['','',''],
+    ['','',''],
+    ['','','']
+  ];
+
     state.getCurrentPlayer = () => state.players[state.currentPlayerIdx];
     state.players = ['', ''];
     state.currentPlayerIdx = 0;
 }
+
+const winner = [ 
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+];
 
 //  DOM SELECTORS 
 const boardElem = document.querySelector('#board'); 
@@ -33,18 +39,20 @@ const changeTurn = () => {
 }
 
 // DOM MANIPULATION FUNCTIONS 
-const renderBoard = () => { 
-    boardElem.innerText = ''; // This allows us to refresh the board to blank 
-    for(let i=0; i<state.board.length; ++i) {      // Creating the grid for the tic tac toe game 
-        const grid = state.board[i];              // This creates the grid for the game 
-        // console.log('grid: ', grid);
-        const boxElem = document.createElement('div');   // This creates the boxes 
-        boxElem.classList.add('box');
-        // console.log('boxElem: ', boxElem);
-        boxElem.dataset.index = i;     // Grabs data from the board 
-        if(grid.isTurned) boxElem.innerText = grid.value;      // This renders to the grid
-        boardElem.appendChild(boxElem);    // This creates the boxElem to go to the DOM
-    }
+const renderBoard = () => {
+  boardElem.innerHTML = '';
+    //create a row
+    for (let rowIdx = 0; rowIdx < state.board.length; rowIdx++) {
+      const row = state.board[rowIdx]
+        for (let j = 0; j < row.length; j++) {
+            // let column = row[j]                // row[j] should be the indexes for each row in the game 
+          const columnElem = document.createElement('div');
+          columnElem.classList.add('column');
+          columnElem.dataset.index = rowIdx;
+          columnElem.innerHTML = row;
+          boardElem.appendChild(columnElem);
+      }
+  }
 }
 
 const renderPlayer = () => { 
@@ -70,12 +78,17 @@ const render = () => {
 }
 
 // EVENT LISTENERS 
+// boardElem.addEventListener('click', function(event) { 
+//     if (event.target.className !== 'column') { 
+//         console.log('event.target: ', event.target);
+//     }
+// })
 boardElem.addEventListener('click', function(event) { 
-    if (event.target.className !== 'box') return;
+    if (event.target.className !== 'column') return;
         console.log('event.target: ', event.target);
-        const boxIdx = event.target.dataset.index;
-        console.log('boxIdx: ', boxIdx);
-        state.board[boxIdx].isTurned = true;
+        const columnIdx = event.target.dataset.index;
+        console.log('columnIdx: ', columnIdx);
+        state.board[columnIdx] = '';
         changeTurn();
         console.log('state.currentPlayerIdx: ', state.currentPlayerIdx);
         console.log('state.getCurrentPlayer(): ', state.getCurrentPlayer());
@@ -98,4 +111,5 @@ playerTurnElem.addEventListener('click', function(event) {
 
 // BOOSTRAPPING 
 resetState();
-render();
+// render();
+renderBoard();

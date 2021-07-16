@@ -4,14 +4,21 @@
 
 main { 
     display: flex;
-    width: 50vh;
+    width: 95vh;
     flex-wrap: wrap;
 }
 
-.box { 
-    width: 15vh;
-    height: 15vh;
+#title { 
+    text-align: left;
+}
+
+.column { 
+    width: 25vh;
+    height: 20vh;
+    font-size: xx-large;
     border: 1px solid black; 
+    text-align: center;
+    vertical-align: middle;
 }
 
 #start { 
