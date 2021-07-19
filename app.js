@@ -1,6 +1,8 @@
 // State 
 const state = {};
 state.currentPlayerIdx = 0;
+state.getCurrentPlayer = () => state.players[state.currentPlayerIdx];
+state.players = ['', ''];
 const resetState = () => { 
   state.board = [
     ['','',''],
@@ -13,57 +15,20 @@ const resetState = () => {
     state.currentPlayerIdx = 0;
 }
 
-// let flatList = []; 
-// const winner = [ 
-//     [0,1,2],
-//     [3,4,5],
-//     [6,7,8],
-//     [0,3,6],
-//     [1,4,7],
-//     [2,5,8],
-//     [0,4,8],
-//     [2,4,6]
-// ];
-
-// const winner = { 
-//   0:
-//   1:
-//   2:
-//   3: 
-//   4:
-//   5: 
-//   6:
-//   7:
-//   8:
-// }
-
-// true = X | false = O
-// let isPlayer1 = true;
-
-
 //  DOM SELECTORS 
 const boardElem = document.querySelector('#board'); 
 const playerTurnElem = document.querySelector('#playerTurn');
+const restartBtn = document.querySelector('.restartBtn');
 
 
 //  HELPER FUNCTIONS 
-const changeTurn = () => { 
-  // state.currentPlayerIdx = (state.currentPlayerIdx + 1) % 2;
-  if (state.currentPlayerIdx === 0) { 
+const changeTurn = () => {
+  if (state.currentPlayerIdx == 0) { 
     state.currentPlayerIdx = 1;
-    return
   }
   else { 
     state.currentPlayerIdx = 0;
-    return
   }
-
-  // if(isPlayer1 == true) {
-  //   isPlayer1 = false;
-  // } else {
-  //   isPlayer1 = true;
-  // }
-  // isPlayer1 = !isPlayer1;
 }
 
 const flattenBoard = () => { 
@@ -71,74 +36,42 @@ const flattenBoard = () => {
   return flatBoard;
 }
 
-
-const checkWinner = () => { 
+const checkWinner = (player) => { 
   const newBoard = flattenBoard(); 
-  console.log('check winner: ', newBoard);
-  if (newBoard[0] === newBoard[1] && newBoard[1] === newBoard[2]) { 
-    console.log('Winner is ', `${state.getCurrentPlayer()}`);
+  let symbol = "";
+  if(state.currentPlayerIdx === 0) {
+    symbol = "X";
+  } else {
+    symbol = "O";
   }
-
+  let winner = false
+  if (newBoard[0] === symbol && newBoard[1] === symbol && newBoard[2] === symbol) { 
+    console.log('Winner on top row ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[3] === symbol && newBoard[4] === symbol && newBoard[5] === symbol) { 
+    console.log('Winner on middle row ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[6] === symbol && newBoard[7] === symbol && newBoard[8] === symbol) { 
+    console.log('Winner is bottom row ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[0] === symbol && newBoard[3] === symbol && newBoard[6] === symbol) { 
+    console.log('Winner is first column ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[1] === symbol && newBoard[4] === symbol && newBoard[7] === symbol) { 
+    console.log('Winner is second column ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[2] === symbol && newBoard[5] === symbol && newBoard[8] === symbol) { 
+    console.log('Winner is third column ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[0] === symbol && newBoard[4] === symbol && newBoard[8] === symbol) { 
+    console.log('Winner is top left to bottom right diagonal ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  if (newBoard[2] === symbol && newBoard[4] === symbol && newBoard[6] === symbol) { 
+    console.log('Winner is top right to bottom left diagonal ', `${state.getCurrentPlayer()}`); winner = true;
+  }
+  return winner;
 } 
 
-// }
-// function equals(a, b, c){ 
-//   return a === b && b === c && a!= '';
-// }
-
-// function checkMoves() { 
-//   let winner = null; 
-//   if (equals(state.board[rowIdx][0], state.board[rowIdx][1], state.board[rowIdx][2])) { 
-//     winner = state.board[rowIdx][0];
-//   }
-
-//   // Checks if horizontal rows have won 
-// }
-// console.log(flattenBoard(state.board));
-// let flatBoard = [].concat.apply([], state.board);
-
-// function flattenList (list) { 
-//   let board = state.board
-//   let flatList = []; 
-//   for (let i = 0; i < board.length: i++) { 
-//     for (let j= 0; j < )
-//   }
-// }
-
-// function flattenList(list) { 
-//   let flatList = []; 
-
-//   list.forEach(element => {
-//     if (Array.isArray(element)) { 
-//       flatList = flatList.concat(flattenList(element));
-//     }
-//     else { 
-//       flatList.push(element);
-//     }
-//   });
-  
-//     return flatList;
-
-// const newBoard = flattenList(state.board);
-
-// const winningMove = (player) => { 
-//   if(flattenList(state.board)[0] === player) { 
-//     if (flattenList(state.board)[1] === player && flattenList(state.board)[2]) { 
-//       console.log('winner');
-//       return true;
-//     }
-//   }
-// }
-
-
-// function checkMoves() { 
-//   let winner = null; 
-//   // Checking for Horizontal winners 
-//   for (let i = 0; i < 3; i++) {
-//     if (equals(state.board[i][0], state.board[i][1], state.board[i][2])) {
-//       winner = state.board[i][0];
-//     }
-//   }
 
 // DOM MANIPULATION FUNCTIONS 
 const renderBoard = () => {
@@ -168,6 +101,7 @@ const renderPlayer = () => {
     `
   } else {
       // if we do have players
+    //  console.log(state.getCurrentPlayer());
      text = `It's currently ${state.getCurrentPlayer()}'s turn`
   }
   playerTurnElem.innerHTML = text;
@@ -183,46 +117,40 @@ const render = () => {
 boardElem.addEventListener('click', function(event) { 
   if (event.target.childNodes.length) return;   //  Checks to see if anything is inside clicked element 
   if (event.target.className !== 'column') return;
-  // console.log('event.target: ', event.target);
   const columnIdx = event.target.dataset.index;
-  // console.log('columnIdx: ', columnIdx);
   const rowIdx = event.target.dataset.row;
-  // console.log(isPlayer1);
   if(state.currentPlayerIdx === 0) {
     state.board[rowIdx][columnIdx] = 'X';
   } else {
     state.board[rowIdx][columnIdx] = 'O';
   }
-  
-  // console.log(rowIdx);
-  // console.log(columnIdx);
-  // console.log(state)
-  // console.log(state.board)
-  // console.log('Flat List', flattenList(state.board));
-  // console.log(state.board);
-  changeTurn();
-  // console.log('state.currentPlayerIdx: ', state.currentPlayerIdx);
-  // console.log('state.getCurrentPlayer(): ', state.getCurrentPlayer());
-  render();
-  checkWinner();
-  // console.log(newBoard);
-  // console.log(newBoard);
-  // checkMoves();
-  // console.log(checkMoves);
-  // winningMove();
-  // console.log(flattenList(state.board));
-
+  if (checkWinner(state.getCurrentPlayer)) { 
+    playerTurnElem.innerHTML = `${state.getCurrentPlayer()} has won!`;
+  } else {
+    render();
+    changeTurn();
+  }
 })
 
 playerTurnElem.addEventListener('click', function(event) { 
     if (event.target.className !== 'start') return;
     const player1Name = document.querySelector('input[name=player1]');
     state.players[0] = player1Name.value;
-    // console.log('state.players: ', state.players[0]);
     const player2Name = document.querySelector('input[name=player2]');
     state.players[1] = player2Name.value;
-    // console.log('state.players: ', state.players[1]);
+    if(state.players[1] == '' ) { 
+      state.players[1] = 'Computer';
+    }
+    changeTurn();
     render();
+})
+
+restartBtn.addEventListener('click', function(event) {
+  console.log(event);
+  if (event.target.className != 'restartBtn') return;
+  resetState();
+  render();
+  console.log('resetState: ', resetState);
 })
 
 
@@ -230,3 +158,5 @@ playerTurnElem.addEventListener('click', function(event) {
 resetState();
 render();
 renderBoard();
+checkWinner();
+changeTurn();
